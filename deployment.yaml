@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twotter
+  labels:
+    app: twotter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: twotter
+  template:
+    metadata:
+      labels:
+        app: twotter
+    spec:
+      containers:
+        - name: authservice
+          image: ninoverhaegh/authservice:latest
+          ports:
+            - containerPort: 8083
+          resources:
+            requests:
+              cpu: 100m
+              memory: 50Mi
+        - name: gatewayservice
+          image: ninoverhaegh/gatewayservice:latest
+          ports:
+            - containerPort: 8079
+          resources:
+            requests:
+              cpu: 100m
+              memory: 50Mi
+        - name: searchservice
+          image: ninoverhaegh/searchservice:latest
+          ports:
+            - containerPort: 8081
+          resources:
+            requests:
+              cpu: 100m
+              memory: 50Mi
+        - name: twootservice
+          image: ninoverhaegh/twootservice:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 100m
+              memory: 50Mi
+        - name: userservice
+          image: ninoverhaegh/userservice:latest
+          ports:
+            - containerPort: 8082
+          resources:
+            requests:
+              cpu: 100m
+              memory: 50Mi
+        - name: rabbitmq
+          image: rabbitmq:3.9.5 # Replace with the desired version
+          ports:
+            - containerPort: 5672
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: guest
+            - name: RABBITMQ_DEFAULT_PASS
+              value: guest
